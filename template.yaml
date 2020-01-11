@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sunpower-sqs-to-dynamodb
+
+  Sample SAM Template for sunpower-sqs-to-dynamodb
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  SunPowerSqsToDynamodbFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: hello_world/
+      Handler: app.lambda_handler
+      Runtime: ruby2.5
+      Environment:
+        Variables:
+          READING: 0.1
+          LOGLEVEL: 1
+      Policies: 
+      - DynamoDBCrudPolicy: {
+        TableName: "sunpower-energy-readings"
+      }
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  SunPowerSqsToDynamodbFunction:
+    Description: "SunPowerSqsToDynamodb Lambda Function ARN"
+    Value: !GetAtt SunPowerSqsToDynamodbFunction.Arn
+  SunPowerSqsToDynamodbFunctionIamRole:
+    Description: "Implicit IAM Role created for SunPowerSqsToDynamodb function"
+    Value: !GetAtt SunPowerSqsToDynamodbFunctionRole.Arn
